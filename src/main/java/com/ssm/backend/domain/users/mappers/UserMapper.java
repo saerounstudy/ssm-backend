@@ -8,5 +8,7 @@ import java.util.Optional;
 @Mapper
 public interface UserMapper {
     Optional<UserMst> selectOneUserWithId(long userId);
+    Optional<UserMst> selectOneUserWithEmail(String userEmail);
+
     long insertOneUser(UserMst userMst);
 }

@@ -3,12 +3,14 @@ package com.ssm.backend.global.exceptions;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.ToString;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 @Getter
 @Builder
 @AllArgsConstructor
+@ToString
 public class ErrorResponse {
     private String status;
     private String message;

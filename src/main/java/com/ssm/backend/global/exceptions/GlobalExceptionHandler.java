@@ -15,7 +15,8 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(SsmException.class)
     public ResponseEntity<ErrorResponse> handleBusinessException(final SsmException e) {
-        log.error("[SSM EXCEPTION HANDLING] " + e.toString(), e);
-        return ErrorResponse.toResponseEntity(e);
+        ResponseEntity<ErrorResponse> errorResponse = ErrorResponse.toResponseEntity(e);
+        log.error("[SSM EXCEPTION HANDLING] {}", errorResponse.getBody());
+        return errorResponse;
     }
 }

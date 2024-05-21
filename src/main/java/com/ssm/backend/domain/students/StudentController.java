@@ -1,17 +1,28 @@
 package com.ssm.backend.domain.students;
 
 import com.ssm.backend.domain.students.dto.StudentMst;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.ssm.backend.domain.students.services.StudentService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/students")
 public class StudentController {
+    private final StudentService studentService;
 
     @GetMapping("/{studentId}")
     public StudentMst getOneStudentWithId(@PathVariable long studentId) {
-        return null;
+        StudentMst studentMst = StudentMst.builder()
+                .studentId(studentId)
+                .showSurvey(true)
+                .build();
+        return studentService.getStudentMstWithStudentId(studentMst);
+    }
+
+    @PatchMapping("/{studentId}/profile")
+    public StudentMst updateStudentProfile(@PathVariable long studentId, @RequestBody StudentMst studentMst){
+        studentMst.setStudentId(studentId);
+        return studentService.updateStudentProfile(studentMst);
     }
 }

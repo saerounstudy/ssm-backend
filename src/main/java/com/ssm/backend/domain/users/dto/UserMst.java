@@ -2,7 +2,8 @@ package com.ssm.backend.domain.users.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.ssm.backend.global.dto.BaseAuditDTO;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.ssm.backend.global.common.BaseAuditDTO;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -16,6 +17,8 @@ public class UserMst extends BaseAuditDTO {
     private long userId;
     private String userEmail;
     private String userName;
+    @JsonInclude(Include.NON_NULL)
+    private String password;
     @JsonIgnore
     private String passwordHash;
 }

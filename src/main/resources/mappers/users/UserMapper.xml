@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 
-<mapper namespace="com.ssm.backend.domain.users.mappers.StudentMapper">
+<mapper namespace="com.ssm.backend.domain.users.mappers.UserMapper">
     <select id="selectOneUserWithId" parameterType="long" resultType="UserMst">
         SELECT
             USER_ID,
@@ -11,8 +11,31 @@
         FROM USER_MST
         WHERE USER_ID = #{userId}
     </select>
-
-    <insert id="insertOneUser" parameterType="UserMst">
-        -- TODO
+    <select id="selectOneUserWithEmail" parameterType="String" resultType="UserMst">
+        SELECT
+            USER_ID,
+            USER_EMAIL,
+            USER_NAME,
+            PASSWORD_HASH
+        FROM USER_MST
+        WHERE USER_EMAIL = #{userEmail}
+    </select>
+    <insert id="insertOneUser" parameterType="UserMst" useGeneratedKeys="true" keyColumn="USER_ID" keyProperty="userId">
+        INSERT INTO USER_MST (
+            USER_ID,
+            USER_EMAIL,
+            USER_NAME,
+            PASSWORD_HASH,
+            CREATED_BY,
+            MODIFIED_BY
+        )
+        VALUES (
+            SSM.USER_ID_SEQ.NEXTVAL,
+            #{userEmail},
+            #{userName},
+            #{passwordHash},
+            #{createdBy},
+            #{modifiedBy}
+        )
     </insert>
 </mapper>

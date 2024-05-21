@@ -2,5 +2,126 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 
 <mapper namespace="com.ssm.backend.domain.students.mappers.StudentMapper">
+    <select id="selectStudentMstWithStudentId" parameterType="long" resultMap="StudentMstMap">
+        SELECT
+               sm.STUDENT_ID
+             , sm.STUDENT_NAME
+             , sm.BIRTHDATE
+             , sm.GENDER
+             , pf.SCHOOL_YEAR_CD
+             , FN_GET_CODE_NAME('SCHOOL_YEAR_CD', pf.SCHOOL_YEAR_CD) AS SCHOOL_YEAR_NAME
+             , pf.ENROLLMENT_STATUS_CD
+             , FN_GET_CODE_NAME('ENROLLMENT_STATUS_CD', pf.ENROLLMENT_STATUS_CD) AS ENROLLMENT_STATUS_NAME
+             , pf.STUDENT_MOBILE_CONTACT
+             , pf.STUDENT_HOME_CONTACT
+            <if test="showSurvey">
+             , svy.ENROLLMENT_SOURCE_CD
+             , svy.ENROLLMENT_SOURCE_DETAIL
+             , svy.DESIRED_MAJOR_CD
+             , NULL AS DESIRED_MAJOR_NAME
+             , svy.DESIRED_SCHOOL_CD
+             , NULL AS DESIRED_SCHOOL_NAME
+             , svy.STUDENT_REMARK
+             , svy.COUNSELING_NOTE
+             , sc.SUBJECT_CD
+             , FN_GET_CODE_NAME('SUBJECT_CD', sc.SUBJECT_CD ) AS SUBJECT_NAME
+             , sc.SCORE_FIRST
+             , sc.SCORE_SECOND
+             , sc.SCORE_THIRD
+             , sc.REMARK
+            </if>
+          FROM STUDENT_MST sm
+          JOIN STUDENT_PROFILE pf ON sm.STUDENT_ID = pf.STUDENT_ID
+        <if test="showSurvey">
+          JOIN STUDENT_SURVEY_MST svy ON sm.STUDENT_ID = svy.STUDENT_ID
+          JOIN STUDENT_SURVEY_SCORE_HIS sc ON sm.STUDENT_ID = sc.STUDENT_ID
+        </if>
+         WHERE sm.STUDENT_ID = #{studentId}
+    </select>
 
+    <resultMap id="StudentMstMap" type="StudentMst">
+        <id column="STUDENT_ID" property="studentId"/>
+        <result column="STUDENT_NAME" property="studentName"/>
+        <result column="BIRTHDATE" property="birthdate"/>
+        <result column="GENDER" property="gender"/>
+        <result column="SCHOOL_YEAR_CD" property="schoolYearCd"/>
+        <result column="SCHOOL_YEAR_NAME" property="schoolYearName"/>
+        <result column="ENROLLMENT_STATUS_CD" property="enrollmentStatusCd"/>
+        <result column="ENROLLMENT_STATUS_NAME" property="enrollmentStatusName"/>
+        <result column="STUDENT_MOBILE_CONTACT" property="studentMobileContact"/>
+        <result column="STUDENT_HOME_CONTACT" property="studentHomeContact"/>
+
+        <association property="survey" javaType="StudentSurveyMst" resultMap="StudentSurveyMstMap"/>
+        <collection column="studentId = student_id" property="parentContacts" javaType="List"
+                    ofType="..StudentParentContact" select="selectStudentParentContactList"/>
+    </resultMap>
+
+    <resultMap id="StudentSurveyMstMap" type="StudentSurveyMst">
+        <result column="ENROLLMENT_SOURCE_CD" property="enrollmentSourceCd"/>
+        <result column="ENROLLMENT_SOURCE_DETAIL" property="enrollmentSourceDetail"/>
+        <result column="DESIRED_MAJOR_CD" property="desiredMajorCd"/>
+        <result column="DESIRED_MAJOR_NAME" property="desiredMajorName"/>
+        <result column="DESIRED_SCHOOL_CD" property="desiredSchoolCd"/>
+        <result column="DESIRED_SCHOOL_NAME" property="desiredSchoolName"/>
+        <result column="STUDENT_REMARK" property="studentRemark"/>
+        <result column="COUNSELING_NOTE" property="counselingNote"/>
+        <collection property="scoreHistories" ofType="StudentSurveyScoreHis" resultMap="StudentSurveyScoreHisMap"/>
+    </resultMap>
+
+    <resultMap id="StudentSurveyScoreHisMap" type="StudentSurveyScoreHis">
+        <result column="SUBJECT_CD" property="subjectCd"/>
+        <result column="SUBJECT_NAME" property="subjectName"/>
+        <result column="SCORE_FIRST" property="scoreFirst"/>
+        <result column="SCORE_SECOND" property="scoreSecond"/>
+        <result column="SCORE_THIRD" property="scoreThird"/>
+        <result column="REMARK" property="remark"/>
+    </resultMap>
+
+    <select id="selectStudentParentContactList" resultType="StudentParentContact">
+        SELECT
+              PARENT_RELATIONSHIP_CD
+            , FN_GET_CODE_NAME('PARENT_RELATIONSHIP_CD', PARENT_RELATIONSHIP_CD) AS PARENT_RELATIONSHIP_NAME
+            , PARENT_MOBILE_CONTACT
+        FROM STUDENT_PARENT_CONTACT
+    </select>
+
+    <update id="updateStudentProfile" parameterType="StudentMst">
+        UPDATE STUDENT_PROFILE
+        SET
+            <if test="schoolYearCd != null and schoolYearCd != ''"> SCHOOL_YEAR_CD = #{schoolYearCd}, </if>
+            <if test="enrollmentStatusCd != null and enrollmentStatusCd != ''"> ENROLLMENT_STATUS_CD = #{enrollmentStatusCd}, </if>
+            <if test="studentMobileContact != null and studentMobileContact != ''"> STUDENT_MOBILE_CONTACT = #{studentMobileContact}, </if>
+            <if test="studentHomeContact != null and studentHomeContact != ''"> STUDENT_HOME_CONTACT = #{studentHomeContact}, </if>
+            MODIFIED_BY = #{modifiedBy},
+            MODIFIED_AT = SYSDATE
+        WHERE STUDENT_ID = #{studentId}
+    </update>
+
+    <insert id="cloneStudentProfileIntoHis" parameterType="StudentMst">
+        INSERT INTO STUDENT_PROFILE_HIS (
+            STUDENT_ID,
+            STUDENT_PROFILE_SEQ,
+            SCHOOL_YEAR_CD,
+            ENROLLMENT_STATUS_CD,
+            STUDENT_MOBILE_CONTACT,
+            STUDENT_HOME_CONTACT,
+            CREATED_BY,
+            CREATED_AT,
+            MODIFIED_BY,
+            MODIFIED_AT
+        )
+        SELECT
+            STUDENT_ID,
+            NVL((SELECT MAX(STUDENT_PROFILE_SEQ) FROM STUDENT_PROFILE_HIS WHERE STUDENT_ID = #{studentId}), 0) + 1,
+            SCHOOL_YEAR_CD,
+            ENROLLMENT_STATUS_CD,
+            STUDENT_MOBILE_CONTACT,
+            STUDENT_HOME_CONTACT,
+            CREATED_BY,
+            CREATED_AT,
+            MODIFIED_BY,
+            MODIFIED_AT
+        FROM STUDENT_PROFILE sp
+        WHERE sp.STUDENT_ID = #{studentId}
+    </insert>
 </mapper>

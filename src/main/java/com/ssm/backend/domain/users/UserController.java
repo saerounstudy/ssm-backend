@@ -21,6 +21,6 @@ public class UserController {
     @PostMapping("")
     public ResponseEntity<UserMst> createOneUser(UserMst userMst) {
         UserMst result = userService.createOneUser(userMst);
-        return ResponseEntity.ok(userMst);
+        return ResponseEntity.ok(result);
     }
 }

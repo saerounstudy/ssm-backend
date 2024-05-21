@@ -1,4 +1,4 @@
-package com.ssm.backend.global.dto;
+package com.ssm.backend.global.common;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
