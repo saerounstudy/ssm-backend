@@ -10,10 +10,13 @@
              , sm.GENDER
              , pf.SCHOOL_YEAR_CD
              , FN_GET_CODE_NAME('SCHOOL_YEAR_CD', pf.SCHOOL_YEAR_CD) AS SCHOOL_YEAR_NAME
+             , pf.SCHOOL_CD
+             , null AS SCHOOL_NAME
              , pf.ENROLLMENT_STATUS_CD
              , FN_GET_CODE_NAME('ENROLLMENT_STATUS_CD', pf.ENROLLMENT_STATUS_CD) AS ENROLLMENT_STATUS_NAME
              , pf.STUDENT_MOBILE_CONTACT
              , pf.STUDENT_HOME_CONTACT
+             , pf.HOME_ADDRESS
             <if test="showSurvey">
              , svy.ENROLLMENT_SOURCE_CD
              , svy.ENROLLMENT_SOURCE_DETAIL
@@ -46,10 +49,13 @@
         <result column="GENDER" property="gender"/>
         <result column="SCHOOL_YEAR_CD" property="schoolYearCd"/>
         <result column="SCHOOL_YEAR_NAME" property="schoolYearName"/>
+        <result column="SCHOOL_CD" property="schoolCd"/>
+        <result column="SCHOOL_NAME" property="schoolName"/>
         <result column="ENROLLMENT_STATUS_CD" property="enrollmentStatusCd"/>
         <result column="ENROLLMENT_STATUS_NAME" property="enrollmentStatusName"/>
         <result column="STUDENT_MOBILE_CONTACT" property="studentMobileContact"/>
         <result column="STUDENT_HOME_CONTACT" property="studentHomeContact"/>
+        <result column="HOME_ADDRESS" property="homeAddress"/>
 
         <association property="survey" javaType="StudentSurveyMst" resultMap="StudentSurveyMstMap"/>
         <collection column="studentId = student_id" property="parentContacts" javaType="List"
@@ -83,6 +89,7 @@
             , FN_GET_CODE_NAME('PARENT_RELATIONSHIP_CD', PARENT_RELATIONSHIP_CD) AS PARENT_RELATIONSHIP_NAME
             , PARENT_MOBILE_CONTACT
         FROM STUDENT_PARENT_CONTACT
+        WHERE STUDENT_ID = #{studentId}
     </select>
 
     <update id="updateStudentProfile" parameterType="StudentMst">
@@ -102,9 +109,11 @@
             STUDENT_ID,
             STUDENT_PROFILE_SEQ,
             SCHOOL_YEAR_CD,
+            SCHOOL_CD,
             ENROLLMENT_STATUS_CD,
             STUDENT_MOBILE_CONTACT,
             STUDENT_HOME_CONTACT,
+            HOME_ADDRESS,
             CREATED_BY,
             CREATED_AT,
             MODIFIED_BY,
@@ -114,14 +123,148 @@
             STUDENT_ID,
             NVL((SELECT MAX(STUDENT_PROFILE_SEQ) FROM STUDENT_PROFILE_HIS WHERE STUDENT_ID = #{studentId}), 0) + 1,
             SCHOOL_YEAR_CD,
+            SCHOOL_CD,
             ENROLLMENT_STATUS_CD,
             STUDENT_MOBILE_CONTACT,
             STUDENT_HOME_CONTACT,
+            HOME_ADDRESS,
             CREATED_BY,
             CREATED_AT,
             MODIFIED_BY,
             MODIFIED_AT
         FROM STUDENT_PROFILE sp
         WHERE sp.STUDENT_ID = #{studentId}
+    </insert>
+
+    <insert id="insertOneStudentMst" parameterType="StudentMst" useGeneratedKeys="true" keyColumn="STUDENT_ID" keyProperty="studentId">
+        INSERT INTO STUDENT_MST (
+             STUDENT_NAME,
+             BIRTHDATE,
+             GENDER,
+             CREATED_BY,
+             CREATED_AT,
+             MODIFIED_BY,
+             MODIFIED_AT
+        )
+        VALUES (
+             #{studentName},
+             #{birthdate},
+             #{gender},
+             #{createdBy},
+             #{createdAt},
+             #{modifiedBy},
+             #{modifiedAt}
+        )
+    </insert>
+    <insert id="insertOneStudentProfile" parameterType="StudentMst">
+        INSERT INTO STUDENT_PROFILE
+        (
+             STUDENT_ID,
+             SCHOOL_YEAR_CD,
+             SCHOOL_CD,
+             ENROLLMENT_STATUS_CD,
+             STUDENT_MOBILE_CONTACT,
+             STUDENT_HOME_CONTACT,
+             HOME_ADDRESS,
+             CREATED_AT,
+             CREATED_BY,
+             MODIFIED_AT,
+             MODIFIED_BY
+        )
+        VALUES
+        (
+            #{studentId},
+            #{schoolYearCd},
+            #{schoolCd},
+            #{enrollmentStatusCd},
+            #{studentMobileContact},
+            #{studentHomeContact},
+            #{homeAddress},
+            #{createdAt},
+            #{createdBy},
+            #{modifiedAt},
+            #{modifiedBy}
+        )
+    </insert>
+
+    <insert id="insertOneStudentSurveyMst" parameterType="StudentSurveyMst">
+        INSERT INTO STUDENT_SURVEY_MST
+        (
+             STUDENT_ID,
+             ENROLLMENT_SOURCE_CD,
+             ENROLLMENT_SOURCE_DETAIL,
+             DESIRED_MAJOR_CD,
+             DESIRED_SCHOOL_CD,
+             STUDENT_REMARK,
+             COUNSELING_NOTE,
+             CREATED_AT,
+             CREATED_BY,
+             MODIFIED_AT,
+             MODIFIED_BY
+        )
+        VALUES (
+           #{studentId},
+           #{enrollmentSourceCd},
+           #{enrollmentSourceDetail},
+           #{desiredMajorCd},
+           #{desiredSchoolCd},
+           #{studentRemark},
+           #{counselingNote},
+           #{createdAt},
+           #{createdBy},
+           #{modifiedAt},
+           #{modifiedBy}
+        )
+    </insert>
+
+    <insert id="insertOneParentContact" parameterType="StudentParentContact">
+        INSERT INTO STUDENT_PARENT_CONTACT
+        (
+            STUDENT_ID,
+            PARENT_RELATIONSHIP_CD,
+            PARENT_MOBILE_CONTACT,
+            CREATED_AT,
+            CREATED_BY,
+            MODIFIED_AT,
+            MODIFIED_BY
+        )
+        VALUES
+        (
+            #{studentId},
+            #{parentRelationshipCd},
+            #{parentMobileContact},
+            #{createdAt},
+            #{createdBy},
+            #{modifiedAt},
+            #{modifiedBy}
+        )
+    </insert>
+    <insert id="insertOneStudentSurveyScoreHis" parameterType="StudentSurveyScoreHis">
+        INSERT INTO STUDENT_SURVEY_SCORE_HIS
+        (
+             STUDENT_ID,
+             SUBJECT_CD,
+             SCORE_FIRST,
+             SCORE_SECOND,
+             SCORE_THIRD,
+             REMARK,
+             CREATED_AT,
+             CREATED_BY,
+             MODIFIED_AT,
+             MODIFIED_BY
+         )
+        VALUES
+        (
+            #{studentId},
+            #{subjectCd},
+            #{scoreFirst},
+            #{scoreSecond},
+            #{scoreThird},
+            #{remark},
+            #{createdAt},
+            #{createdBy},
+            #{modifiedAt},
+            #{modifiedBy}
+        )
     </insert>
 </mapper>

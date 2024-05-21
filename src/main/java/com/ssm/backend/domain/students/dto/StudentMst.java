@@ -23,10 +23,13 @@ public class StudentMst extends BaseAuditDTO {
     private String gender;
     private String schoolYearCd;
     private String schoolYearName;
+    private String schoolCd;
+    private String schoolName;
     private String enrollmentStatusCd;
     private String enrollmentStatusName;
     private String studentMobileContact;
     private String studentHomeContact;
+    private String homeAddress;
     @JsonInclude(Include.NON_NULL)
     private StudentSurveyMst survey;
     @JsonInclude(Include.NON_EMPTY)

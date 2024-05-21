@@ -21,6 +21,8 @@ public enum ErrorCode {
     USER_EMAIL_CONFLICT(HttpStatus.CONFLICT, "User email conflicts", "U4091"),
 
     /* STUDENTS */
+    /* 400 */
+    BAD_STUDENT_BODY(HttpStatus.BAD_REQUEST, "Wrong Body Format", "S4001"),
     /* 404 */
     STUDENTS_NOT_FOUND(HttpStatus.NOT_FOUND, "Students not found", "S4041"),
     ;

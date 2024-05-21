@@ -13,14 +13,14 @@ public class AuditUtil {
             dto.setModifiedAt(LocalDateTime.now());
         }
         if (dto.getModifiedBy() == null) {
-            dto.setCreatedBy("TEST-ADMIN");
+            dto.setModifiedBy("TEST-ADMIN");
         }
         if (!fullUpdate) return;
         if (dto.getCreatedAt() == null) {
             dto.setCreatedAt(LocalDateTime.now());
         }
         if (dto.getCreatedBy() == null) {
-            dto.setModifiedBy("TEST-ADMIN");
+            dto.setCreatedBy("TEST-ADMIN");
         }
     }
 }
