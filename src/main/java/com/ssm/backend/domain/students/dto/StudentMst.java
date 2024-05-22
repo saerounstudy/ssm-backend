@@ -35,5 +35,5 @@ public class StudentMst extends BaseAuditDTO {
     @JsonInclude(Include.NON_EMPTY)
     private List<StudentParentContact> parentContacts;
     @JsonIgnore
-    private boolean showSurvey;
+    private boolean showSurvey;  // selectStudentMstWithStudentId 조회 시 survey 필드 포함여부
 }
