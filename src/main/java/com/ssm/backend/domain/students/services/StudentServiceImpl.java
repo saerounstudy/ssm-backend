@@ -21,13 +21,14 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public void createStudentMst(StudentMst studentMst){}
 
+    @Override
     public StudentMst getStudentMstWithStudentId(long studentId) {
         return getStudentMstWithStudentId(StudentMst.builder().studentId(studentId).build());
     }
     @Override
     public StudentMst getStudentMstWithStudentId(StudentMst studentMst){
         return studentMapper.selectStudentMstWithStudentId(studentMst)
-                .orElseThrow(SsmException.supplier(ErrorCode.STUDENT_NOT_FOUND, "해당 studentId의 학생을 찾을 수 없습니다."));
+                .orElseThrow(SsmException.supplier(ErrorCode.STUDENT_NOT_FOUND, "존재하지 않는 학생입니다."));
     }
     @Override
     public StudentMst createOneStudent(StudentMst studentMst) {
@@ -40,7 +41,6 @@ public class StudentServiceImpl implements StudentService {
             throw SsmException.from(ErrorCode.BAD_STUDENT_BODY, "Profile은 null 일 수 없습니다.");
         }
         studentMapper.insertOneStudentMst(studentMst);
-
         Long studentId = studentMst.getStudentId();
 
         // Insert Student Profile
@@ -63,9 +63,13 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public StudentProfile getStudentProfile(StudentProfile studentProfile) {
         return studentMapper.selectOneStudentProfile(studentProfile)
-                .orElseThrow(SsmException.supplier(ErrorCode.STUDENT_NOT_FOUND, "해당 StudentId와 일치하는 학생 프로필을 찾을 수 없습니다."));
+                .orElseThrow(SsmException.supplier(ErrorCode.STUDENT_NOT_FOUND, "존재하지 않는 학생 프로필입니다."));
     }
 
+    @Override
+    public StudentProfile getStudentProfile(long studentId) {
+        return getStudentProfile(StudentProfile.builder().studentId(studentId).build());
+    }
     @Override
     public StudentProfile updateStudentProfile(StudentProfile studentProfile) {
         getStudentMstWithStudentId(studentProfile.getStudentId()); // 학생 마스터 존재여부 체크

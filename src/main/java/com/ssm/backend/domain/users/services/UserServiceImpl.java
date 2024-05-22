@@ -21,7 +21,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserMst selectOneUserWithId(long userId) {
         return userMapper.selectOneUserWithId(userId)
-                .orElseThrow(SsmException.supplier(ErrorCode.USER_NOT_FOUND, "userId에 해당하는 유저를 찾을 수 없습니다."));
+                .orElseThrow(SsmException.supplier(ErrorCode.USER_NOT_FOUND, "존재하지 않는 유저입니다."));
     }
 
     @Override

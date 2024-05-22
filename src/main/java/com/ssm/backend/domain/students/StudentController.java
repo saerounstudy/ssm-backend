@@ -16,7 +16,7 @@ public class StudentController {
 
     @GetMapping("/{studentId}")
     public ResponseEntity<StudentMst> getOneStudentWithId(@PathVariable long studentId) {
-        StudentMst studentMst = StudentMst.builder().studentId(studentId).build();
+        StudentMst studentMst = StudentMst.builder().studentId(studentId).includeProfile(true).includeSurvey(true).build();
         StudentMst result = studentService.getStudentMstWithStudentId(studentMst);
         return ResponseEntity.ok(result);
     }
@@ -26,7 +26,11 @@ public class StudentController {
         StudentMst result = studentService.createOneStudent(studentMst);
         return ResponseEntity.status(HttpStatus.CREATED).body(result);
     }
-
+    @GetMapping("/{studentId}/profile")
+    public ResponseEntity<StudentProfile> getStudentProfile(@PathVariable long studentId) {
+        StudentProfile studentProfile = studentService.getStudentProfile(studentId);
+        return ResponseEntity.ok(studentProfile);
+    }
     @PatchMapping("/{studentId}/profile")
     public ResponseEntity<StudentProfile> updateStudentProfile(@PathVariable long studentId, @RequestBody StudentProfile studentProfile){
         studentProfile.setStudentId(studentId);

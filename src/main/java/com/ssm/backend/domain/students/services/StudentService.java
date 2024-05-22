@@ -5,8 +5,10 @@ import com.ssm.backend.domain.students.dto.StudentProfile;
 
 public interface StudentService {
     void createStudentMst(StudentMst studentMst);
+    StudentMst getStudentMstWithStudentId(long StudentId);
     StudentMst getStudentMstWithStudentId(StudentMst studentMst);
     StudentMst createOneStudent(StudentMst studentMst);
     StudentProfile updateStudentProfile(StudentProfile studentProfile);
     StudentProfile getStudentProfile(StudentProfile studentProfile);
+    StudentProfile getStudentProfile(long studentId);
 }

@@ -15,9 +15,9 @@ import java.util.List;
 public class StudentSurveyMst extends Auditable {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Long studentId;
-    private String enrollmentSourceCd;
-    private String enrollmentSourceName;
-    private String enrollmentSourceDetail;
+    private String registrationSourceCd;
+    private String registrationSourceName;
+    private String registrationSourceDetail;
     private String desiredMajorCd;
     private String desiredMajorName;
     private String desiredSchoolCd;

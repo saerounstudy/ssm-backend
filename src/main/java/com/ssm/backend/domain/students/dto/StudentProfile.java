@@ -18,8 +18,8 @@ public class StudentProfile extends Auditable {
     private String schoolYearName;
     private String schoolCd;
     private String schoolName;
-    private String enrollmentStatusCd;
-    private String enrollmentStatusName;
+    private String studentStatusCd;
+    private String studentStatusName;
     private String studentMobileContact;
     private String studentHomeContact;
     private String homeAddress;

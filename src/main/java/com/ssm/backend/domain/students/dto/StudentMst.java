@@ -20,6 +20,7 @@ public class StudentMst extends Auditable {
     private String studentName;
     private LocalDate birthdate;
     private String gender;
+    @JsonInclude(Include.NON_NULL)
     private StudentProfile profile;
     @JsonInclude(Include.NON_NULL)
     private StudentSurveyMst survey;

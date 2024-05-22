@@ -1,17 +1,23 @@
 package com.ssm.backend.global.exceptions;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.ToString;
+import lombok.*;
 
 import java.util.function.Supplier;
 
-@Getter
+@EqualsAndHashCode(callSuper = true)
+@Data
+@Builder
 @AllArgsConstructor
-@ToString
 public class SsmException extends RuntimeException {
-    private final ErrorCode errorCode;
-    private final String remark;
+    private ErrorCode errorCode;
+    private String remark;
+    private String path;
+
+    SsmException(ErrorCode errorCode, String remark) {
+        this.errorCode = errorCode;
+        this.remark = remark;
+        this.path = null;
+    }
 
     public static SsmException from(ErrorCode errorCode, String remark) {
         return new SsmException(errorCode, remark);

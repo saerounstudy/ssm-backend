@@ -14,17 +14,17 @@ public enum ErrorCode {
 
     /* USERS */
     /* 400 */
-    EMPTY_PASSWORD(HttpStatus.BAD_REQUEST, "Empty Password", "U4001"),
+    EMPTY_PASSWORD(HttpStatus.BAD_REQUEST, "Password cannot be empty", "U4001"),
     /* 404 */
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, "User not found", "U4041"),
     /* 409 */
-    USER_EMAIL_CONFLICT(HttpStatus.CONFLICT, "User email conflicts", "U4091"),
+    USER_EMAIL_CONFLICT(HttpStatus.CONFLICT, "User email already exists", "U4091"),
 
     /* STUDENTS */
     /* 400 */
     BAD_STUDENT_BODY(HttpStatus.BAD_REQUEST, "Wrong Body Format", "S4001"),
     /* 404 */
-    STUDENT_NOT_FOUND(HttpStatus.NOT_FOUND, "Students not found", "S4041"),
+    STUDENT_NOT_FOUND(HttpStatus.NOT_FOUND, "Student not found", "S4041"),
     ;
     private final HttpStatus status;
     private final String message;
@@ -34,4 +34,7 @@ public enum ErrorCode {
     public String toString() {
         return this.status + " " + message + " " + code;
     }
+
+    public String error() { return this.status.name() + ": " + this.getMessage(); }
+    public int status() { return this.status.value(); }
 }
