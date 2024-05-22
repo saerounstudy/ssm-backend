@@ -10,6 +10,7 @@ import com.ssm.backend.global.common.AuditUtil;
 import com.ssm.backend.global.exceptions.ErrorCode;
 import com.ssm.backend.global.exceptions.SsmException;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.NotImplementedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -73,9 +74,16 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public StudentProfile updateStudentProfile(StudentProfile studentProfile) {
         getStudentMstWithStudentId(studentProfile.getStudentId()); // 학생 마스터 존재여부 체크
-        getStudentProfile(studentProfile); // 학생 프로필 존재여부 체크
+        StudentProfile p = getStudentProfile(studentProfile); // 학생 프로필 존재여부 체크
         studentMapper.cloneStudentProfileIntoHis(studentProfile);
+        System.out.println("==============" + p);
+        System.out.println("==============" + studentProfile);
         studentMapper.updateStudentProfile(studentProfile);
         return getStudentProfile(studentProfile);
+    }
+
+    @Override
+    public StudentMst softDeleteStudent(long studentId) {
+        throw new NotImplementedException();
     }
 }

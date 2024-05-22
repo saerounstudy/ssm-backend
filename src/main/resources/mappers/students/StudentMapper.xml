@@ -37,7 +37,7 @@
         <result column="STUDENT_NAME" property="studentName"/>
         <result column="BIRTHDATE" property="birthdate"/>
         <result column="GENDER" property="gender"/>
-        <association column="student_id"  property="profile" javaType="StudentProfile" select="selectOneStudentProfile"/>
+        <association column="{studentId = student_id}" notNullColumn="studentId" property="profile" javaType="StudentProfile" select="selectOneStudentProfile"/>
         <association property="survey" javaType="StudentSurveyMst" resultMap="StudentSurveyMstMap"/>
     </resultMap>
 
@@ -104,14 +104,15 @@
     <update id="updateStudentProfile" parameterType="StudentProfile">
         UPDATE STUDENT_PROFILE
         SET
-            <if test="schoolYearCd != null and schoolYearCd != ''"> SCHOOL_YEAR_CD = #{schoolYearCd}, </if>
-            <if test="studentStatusCd != null and studentStatusCd != ''"> STUDENT_STATUS_CD = #{studentStatusCd}, </if>
+            <if test="schoolYearCd != null"> SCHOOL_YEAR_CD = #{schoolYearCd}, </if>
+            <if test="studentStatusCd != null"> STUDENT_STATUS_CD = #{studentStatusCd}, </if>
             <if test="studentMobileContact != null and studentMobileContact != ''"> STUDENT_MOBILE_CONTACT = #{studentMobileContact}, </if>
             <if test="studentHomeContact != null and studentHomeContact != ''"> STUDENT_HOME_CONTACT = #{studentHomeContact}, </if>
+            <if test="homeAddress != null and homeAddress != ''"> HOME_ADDRESS = #{homeAddress}, </if>
             <if test="parentContact1 != null and parentContact1 != ''"> PARENT_CONTACT_1 = #{parentContact1}, </if>
-            <if test="parentRelationshipCd1 != null and parentRelationshipCd1 != ''"> PARENT_RELATIONSHIP_CD_1 = #{parentRelationshipCd1}, </if>
+            <if test="parentRelationshipCd1 != null"> PARENT_RELATIONSHIP_CD_1 = #{parentRelationshipCd1}, </if>
             <if test="parentContact2 != null and parentContact2 != ''"> PARENT_CONTACT_2 = #{parentContact2}, </if>
-            <if test="parentRelationshipCd2 != null and parentRelationshipCd2 != ''"> PARENT_RELATIONSHIP_CD_2 = #{parentRelationshipCd2}, </if>
+            <if test="parentRelationshipCd2 != null"> PARENT_RELATIONSHIP_CD_2 = #{parentRelationshipCd2}, </if>
             MODIFIED_BY = #{modifiedBy},
             MODIFIED_AT = SYSDATE
         WHERE STUDENT_ID = #{studentId}

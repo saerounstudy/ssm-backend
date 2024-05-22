@@ -28,8 +28,8 @@ public class StudentController {
     }
     @GetMapping("/{studentId}/profile")
     public ResponseEntity<StudentProfile> getStudentProfile(@PathVariable long studentId) {
-        StudentProfile studentProfile = studentService.getStudentProfile(studentId);
-        return ResponseEntity.ok(studentProfile);
+        StudentProfile result = studentService.getStudentProfile(studentId);
+        return ResponseEntity.ok(result);
     }
     @PatchMapping("/{studentId}/profile")
     public ResponseEntity<StudentProfile> updateStudentProfile(@PathVariable long studentId, @RequestBody StudentProfile studentProfile){
@@ -38,4 +38,9 @@ public class StudentController {
         return ResponseEntity.ok(result);
     }
 
+    @DeleteMapping("/{studentId}")
+    public ResponseEntity<StudentMst> softDeleteStudent(@PathVariable long studentId) {
+        StudentMst result = studentService.softDeleteStudent(studentId);
+        return ResponseEntity.ok(result);
+    }
 }

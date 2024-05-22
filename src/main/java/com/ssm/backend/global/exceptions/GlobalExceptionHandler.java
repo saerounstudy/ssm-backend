@@ -16,9 +16,9 @@ public class GlobalExceptionHandler {
      * 비즈니스 요구사항 예외 처리
      */
     @ExceptionHandler(SsmException.class)
-    public ResponseEntity<ErrorResponse> handleSsmException(SsmException e, final HttpServletRequest request) {
-        e.setPath(request.getContextPath());
-        ResponseEntity<ErrorResponse> errorResponse = ErrorResponse.toResponseEntity(e);
+    public ResponseEntity<ErrorResponse> handleSsmException(SsmException exception, final HttpServletRequest request) {
+        exception.setPath(request.getRequestURI());
+        ResponseEntity<ErrorResponse> errorResponse = ErrorResponse.toResponseEntity(exception);
         log.error("[SSM EXCEPTION HANDLING] {}", errorResponse.getBody());
         return errorResponse;
     }

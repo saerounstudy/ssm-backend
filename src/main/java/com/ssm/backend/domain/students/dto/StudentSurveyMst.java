@@ -2,6 +2,7 @@ package com.ssm.backend.domain.students.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.ssm.backend.global.common.Auditable;
+import com.ssm.backend.global.db.codes.RegistrationSourceCd;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -15,8 +16,7 @@ import java.util.List;
 public class StudentSurveyMst extends Auditable {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Long studentId;
-    private String registrationSourceCd;
-    private String registrationSourceName;
+    private RegistrationSourceCd registrationSourceCd;
     private String registrationSourceDetail;
     private String desiredMajorCd;
     private String desiredMajorName;

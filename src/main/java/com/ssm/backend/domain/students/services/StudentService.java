@@ -11,4 +11,5 @@ public interface StudentService {
     StudentProfile updateStudentProfile(StudentProfile studentProfile);
     StudentProfile getStudentProfile(StudentProfile studentProfile);
     StudentProfile getStudentProfile(long studentId);
+    StudentMst softDeleteStudent(long studentId);
 }

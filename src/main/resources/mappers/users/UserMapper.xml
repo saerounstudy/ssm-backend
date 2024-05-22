@@ -7,7 +7,9 @@
             USER_ID,
             USER_EMAIL,
             USER_NAME,
-            PASSWORD_HASH
+            PASSWORD_HASH,
+            MODIFIED_AT,
+            MODIFIED_BY
         FROM USER_MST
         WHERE USER_ID = #{userId}
     </select>
