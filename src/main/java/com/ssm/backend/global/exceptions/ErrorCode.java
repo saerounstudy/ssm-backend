@@ -24,7 +24,7 @@ public enum ErrorCode {
     /* 400 */
     BAD_STUDENT_BODY(HttpStatus.BAD_REQUEST, "Wrong Body Format", "S4001"),
     /* 404 */
-    STUDENTS_NOT_FOUND(HttpStatus.NOT_FOUND, "Students not found", "S4041"),
+    STUDENT_NOT_FOUND(HttpStatus.NOT_FOUND, "Students not found", "S4041"),
     ;
     private final HttpStatus status;
     private final String message;

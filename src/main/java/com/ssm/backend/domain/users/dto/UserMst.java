@@ -3,7 +3,7 @@ package com.ssm.backend.domain.users.dto;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import com.ssm.backend.global.common.BaseAuditDTO;
+import com.ssm.backend.global.common.Auditable;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -13,7 +13,7 @@ import lombok.experimental.SuperBuilder;
 @Data
 @SuperBuilder
 @NoArgsConstructor
-public class UserMst extends BaseAuditDTO {
+public class UserMst extends Auditable {
     private long userId;
     private String userEmail;
     private String userName;

@@ -1,14 +1,12 @@
 package com.ssm.backend.global.common;
 
-import org.springframework.stereotype.Component;
-
 import java.time.LocalDateTime;
 
 public class AuditUtil {
-    public static void setAudit(BaseAuditDTO dto) {
+    public static void setAudit(Auditable dto) {
         setAudit(dto, false);
     }
-    public static void setAudit(BaseAuditDTO dto, boolean fullUpdate) {
+    public static void setAudit(Auditable dto, boolean fullUpdate) {
         if (dto.getModifiedAt() == null) {
             dto.setModifiedAt(LocalDateTime.now());
         }

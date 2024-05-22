@@ -1,6 +1,7 @@
 package com.ssm.backend.domain.students;
 
 import com.ssm.backend.domain.students.dto.StudentMst;
+import com.ssm.backend.domain.students.dto.StudentProfile;
 import com.ssm.backend.domain.students.services.StudentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -15,10 +16,7 @@ public class StudentController {
 
     @GetMapping("/{studentId}")
     public ResponseEntity<StudentMst> getOneStudentWithId(@PathVariable long studentId) {
-        StudentMst studentMst = StudentMst.builder()
-                .studentId(studentId)
-                .showSurvey(true)
-                .build();
+        StudentMst studentMst = StudentMst.builder().studentId(studentId).build();
         StudentMst result = studentService.getStudentMstWithStudentId(studentMst);
         return ResponseEntity.ok(result);
     }
@@ -30,9 +28,10 @@ public class StudentController {
     }
 
     @PatchMapping("/{studentId}/profile")
-    public ResponseEntity<StudentMst> updateStudentProfile(@PathVariable long studentId, @RequestBody StudentMst studentMst){
-        studentMst.setStudentId(studentId);
-        StudentMst result = studentService.updateStudentProfile(studentMst);
+    public ResponseEntity<StudentProfile> updateStudentProfile(@PathVariable long studentId, @RequestBody StudentProfile studentProfile){
+        studentProfile.setStudentId(studentId);
+        StudentProfile result = studentService.updateStudentProfile(studentProfile);
         return ResponseEntity.ok(result);
     }
+
 }

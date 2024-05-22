@@ -27,7 +27,9 @@
             USER_NAME,
             PASSWORD_HASH,
             CREATED_BY,
-            MODIFIED_BY
+            CREATED_AT,
+            MODIFIED_BY,
+            MODIFIED_AT
         )
         VALUES (
             SSM.USER_ID_SEQ.NEXTVAL,
@@ -35,7 +37,9 @@
             #{userName},
             #{passwordHash},
             #{createdBy},
-            #{modifiedBy}
+            #{createdAt},
+            #{modifiedBy},
+            #{modifiedAt}
         )
     </insert>
 </mapper>

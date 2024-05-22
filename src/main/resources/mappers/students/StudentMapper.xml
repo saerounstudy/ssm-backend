@@ -8,6 +8,7 @@
              , sm.STUDENT_NAME
              , sm.BIRTHDATE
              , sm.GENDER
+            <if test="includeProfile">
              , pf.SCHOOL_YEAR_CD
              , FN_GET_CODE_NAME('SCHOOL_YEAR_CD', pf.SCHOOL_YEAR_CD) AS SCHOOL_YEAR_NAME
              , pf.SCHOOL_CD
@@ -17,7 +18,14 @@
              , pf.STUDENT_MOBILE_CONTACT
              , pf.STUDENT_HOME_CONTACT
              , pf.HOME_ADDRESS
-            <if test="showSurvey">
+             , pf.PARENT_CONTACT_1
+             , pf.PARENT_RELATIONSHIP_CD_1
+             , FN_GET_CODE_NAME('PARENT_RELATIONSHIP_CD', pf.PARENT_RELATIONSHIP_CD_1) AS PARENT_RELATIONSHIP_NAME_1
+             , pf.PARENT_CONTACT_2
+             , pf.PARENT_RELATIONSHIP_CD_2
+             , FN_GET_CODE_NAME('PARENT_RELATIONSHIP_CD', pf.PARENT_RELATIONSHIP_CD_2) AS PARENT_RELATIONSHIP_NAME_2
+            </if>
+            <if test="includeSurvey">
              , svy.ENROLLMENT_SOURCE_CD
              , svy.ENROLLMENT_SOURCE_DETAIL
              , svy.DESIRED_MAJOR_CD
@@ -34,8 +42,10 @@
              , sc.REMARK
             </if>
           FROM STUDENT_MST sm
+        <if test="includeProfile">
           JOIN STUDENT_PROFILE pf ON sm.STUDENT_ID = pf.STUDENT_ID
-        <if test="showSurvey">
+        </if>
+        <if test="includeSurvey">
           JOIN STUDENT_SURVEY_MST svy ON sm.STUDENT_ID = svy.STUDENT_ID
           JOIN STUDENT_SURVEY_SCORE_HIS sc ON sm.STUDENT_ID = sc.STUDENT_ID
         </if>
@@ -47,6 +57,10 @@
         <result column="STUDENT_NAME" property="studentName"/>
         <result column="BIRTHDATE" property="birthdate"/>
         <result column="GENDER" property="gender"/>
+        <association property="profile" javaType="StudentProfile" resultMap="StudentProfileMap"/>
+        <association property="survey" javaType="StudentSurveyMst" resultMap="StudentSurveyMstMap"/>
+    </resultMap>
+    <resultMap id="StudentProfileMap" type="StudentProfile">
         <result column="SCHOOL_YEAR_CD" property="schoolYearCd"/>
         <result column="SCHOOL_YEAR_NAME" property="schoolYearName"/>
         <result column="SCHOOL_CD" property="schoolCd"/>
@@ -56,12 +70,13 @@
         <result column="STUDENT_MOBILE_CONTACT" property="studentMobileContact"/>
         <result column="STUDENT_HOME_CONTACT" property="studentHomeContact"/>
         <result column="HOME_ADDRESS" property="homeAddress"/>
-
-        <association property="survey" javaType="StudentSurveyMst" resultMap="StudentSurveyMstMap"/>
-        <collection column="studentId = student_id" property="parentContacts" javaType="List"
-                    ofType="..StudentParentContact" select="selectStudentParentContactList"/>
+        <result column="PARENT_CONTACT_1" property="parentContact1"/>
+        <result column="PARENT_RELATIONSHIP_CD_1" property="parentRelationshipCd1"/>
+        <result column="PARENT_RELATIONSHIP_NAME_1" property="parentRelationshipName1"/>
+        <result column="PARENT_CONTACT_2" property="parentContact2"/>
+        <result column="PARENT_RELATIONSHIP_CD_2" property="parentRelationshipCd2"/>
+        <result column="PARENT_RELATIONSHIP_NAME_2" property="parentRelationshipName2"/>
     </resultMap>
-
     <resultMap id="StudentSurveyMstMap" type="StudentSurveyMst">
         <result column="ENROLLMENT_SOURCE_CD" property="enrollmentSourceCd"/>
         <result column="ENROLLMENT_SOURCE_DETAIL" property="enrollmentSourceDetail"/>
@@ -83,15 +98,6 @@
         <result column="REMARK" property="remark"/>
     </resultMap>
 
-    <select id="selectStudentParentContactList" resultType="StudentParentContact">
-        SELECT
-              PARENT_RELATIONSHIP_CD
-            , FN_GET_CODE_NAME('PARENT_RELATIONSHIP_CD', PARENT_RELATIONSHIP_CD) AS PARENT_RELATIONSHIP_NAME
-            , PARENT_MOBILE_CONTACT
-        FROM STUDENT_PARENT_CONTACT
-        WHERE STUDENT_ID = #{studentId}
-    </select>
-
     <update id="updateStudentProfile" parameterType="StudentMst">
         UPDATE STUDENT_PROFILE
         SET
@@ -99,6 +105,10 @@
             <if test="enrollmentStatusCd != null and enrollmentStatusCd != ''"> ENROLLMENT_STATUS_CD = #{enrollmentStatusCd}, </if>
             <if test="studentMobileContact != null and studentMobileContact != ''"> STUDENT_MOBILE_CONTACT = #{studentMobileContact}, </if>
             <if test="studentHomeContact != null and studentHomeContact != ''"> STUDENT_HOME_CONTACT = #{studentHomeContact}, </if>
+            <if test="parentContact1 != null and parentContact1 != ''"> PARENT_CONTACT_1 = parentContact1 </if>
+            <if test="parentRelationshipCd1 != null and parentRelationshipCd1 != ''"> PARENT_RELATIONSHIP_CD_1 = parentRelationshipCd1 </if>
+            <if test="parentContact2 != null and parentContact2 != ''"> PARENT_CONTACT_2 = parentContact2 </if>
+            <if test="parentRelationshipCd2 != null and parentRelationshipCd2 != ''"> PARENT_RELATIONSHIP_CD_2 = parentRelationshipCd2 </if>
             MODIFIED_BY = #{modifiedBy},
             MODIFIED_AT = SYSDATE
         WHERE STUDENT_ID = #{studentId}
@@ -217,28 +227,6 @@
         )
     </insert>
 
-    <insert id="insertOneParentContact" parameterType="StudentParentContact">
-        INSERT INTO STUDENT_PARENT_CONTACT
-        (
-            STUDENT_ID,
-            PARENT_RELATIONSHIP_CD,
-            PARENT_MOBILE_CONTACT,
-            CREATED_AT,
-            CREATED_BY,
-            MODIFIED_AT,
-            MODIFIED_BY
-        )
-        VALUES
-        (
-            #{studentId},
-            #{parentRelationshipCd},
-            #{parentMobileContact},
-            #{createdAt},
-            #{createdBy},
-            #{modifiedAt},
-            #{modifiedBy}
-        )
-    </insert>
     <insert id="insertOneStudentSurveyScoreHis" parameterType="StudentSurveyScoreHis">
         INSERT INTO STUDENT_SURVEY_SCORE_HIS
         (

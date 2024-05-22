@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @Data
 @SuperBuilder
 @NoArgsConstructor
-public class BaseAuditDTO {
+public class Auditable {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private LocalDateTime createdAt;
     @JsonInclude(JsonInclude.Include.NON_NULL)
