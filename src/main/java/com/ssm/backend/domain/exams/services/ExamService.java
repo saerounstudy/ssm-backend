@@ -7,12 +7,12 @@ import java.util.List;
 
 public interface ExamService {
     List<ExamMst> getExamList(ExamMst examMst);
-    ExamMst createExam(ExamMst examMst);
+    void createExam(ExamMst examMst);
     ExamMst getExamMst(long examId);
     ExamMst getExamMst(ExamMst examMst);
     ExamDtl getExamDtl(ExamDtl examDtl);
     List<ExamDtl> getExamDtlList(ExamDtl examDtl);
-    ExamMst updateExamMst(ExamMst examMst);
-    ExamDtl updateExamDtl(ExamDtl examDtl);
-    ExamDtl createExamDtl(ExamDtl examDtl);
+    void updateExamMst(ExamMst examMst);
+    void updateExamDtl(ExamDtl examDtl);
+    void createExamDtl(ExamDtl examDtl);
 }

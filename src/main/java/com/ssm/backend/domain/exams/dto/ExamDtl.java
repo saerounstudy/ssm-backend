@@ -1,7 +1,7 @@
 package com.ssm.backend.domain.exams.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.ssm.backend.global.dto.Auditable;
+import com.ssm.backend.global.common.dto.Auditable;
 import com.ssm.backend.global.db.codes.SubjectCd;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -17,10 +17,20 @@ public class ExamDtl extends Auditable {
     private Long examId;
     private Long studentId;
     private SubjectCd subjectCd;
+    private String subjectName;
     private Double rawScore;
     private Double standardScore;
     private Integer classRank;
     private Integer schoolRank;
     private Double nationalPercentile;
     private String grade;
+
+    public boolean hasBody() {
+        return this.rawScore != null ||
+                this.standardScore != null ||
+                this.classRank != null ||
+                this.schoolRank != null ||
+                this.nationalPercentile != null ||
+                this.grade != null;
+    }
 }

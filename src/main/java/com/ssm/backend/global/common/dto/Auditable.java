@@ -1,4 +1,4 @@
-package com.ssm.backend.global.dto;
+package com.ssm.backend.global.common.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @Data
 @SuperBuilder
 @NoArgsConstructor
-public abstract class Auditable {
+public abstract class Auditable implements Responsable {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private LocalDateTime createdAt;
     @JsonInclude(JsonInclude.Include.NON_NULL)

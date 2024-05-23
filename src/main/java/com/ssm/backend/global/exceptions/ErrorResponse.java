@@ -1,36 +1,35 @@
 package com.ssm.backend.global.exceptions;
 
+import com.ssm.backend.global.common.dto.BaseResponse;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
+import lombok.experimental.SuperBuilder;
 import org.springframework.http.ResponseEntity;
 
 import java.time.LocalDateTime;
 
 @Getter
-@Builder
+@SuperBuilder
 @AllArgsConstructor
 @ToString
-public class ErrorResponse {
-    private final int status;
-    private final String error;
-    private final String remark;
-    private final String path;
-    private final String errorCode;
-    private final LocalDateTime timestamp;
+public class ErrorResponse extends BaseResponse {
+    private SsmError error;
 
     public ErrorResponse(SsmException e) {
-        this.status = e.getErrorCode().status();
-        this.error = e.getErrorCode().error();
-        this.remark = e.getRemark();
-        this.path = e.getPath();
-        this.errorCode = e.getErrorCode().getCode();
+        String message = e.getRemark() == null ? e.getErrorCode().message() : e.getRemark();
+        this.error = SsmError.with(e.getErrorCode().code(), message);
+        this.status = e.getErrorCode().getStatus();
+        this.success = false;
         this.timestamp = LocalDateTime.now();
+        this.path = e.getPath();
+    }
+    public static ErrorResponse from(SsmException e) {
+        return new ErrorResponse(e);
     }
     public static ResponseEntity<ErrorResponse> toResponseEntity(SsmException e) {
         return new ResponseEntity<>(
-                new ErrorResponse(e),
+                ErrorResponse.from(e),
                 e.getErrorCode().getStatus()
         );
     }

@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.ssm.backend.domain.exams.mappers.ExamMapper">
+    <select id="selectManyExamMst" parameterType="ExamMst" resultType="ExamMst">
+
+    </select>
+
+    <resultMap id="ExamMstMap" type="ExamMst">
+        <id property="examId" column="EXAM_ID"/>
+        <result property="examYear" column="EXAM_YEAR"/>
+        <result property="examMonth" column="EXAM_MONTH"/>
+        <result property="studentSchoolYearCd" column="STUDENT_SCHOOL_YEAR_CD"/>
+        <result property="studentSchoolYearName" column="STUDENT_SCHOOL_YEAR_NAME"/>
+        <result property="examTypeCd" column="EXAM_TYPE_CD"/>
+        <result property="examTypeName" column="EXAM_TYPE_NAME"/>
+        <result property="examSessionCd" column="EXAM_SESSION_CD"/>
+        <result property="examSessionName" column="EXAM_SESSION_NAME"/>
+        <result property="examOrganizer" column="EXAM_ORGANIZER"/>
+        <result property="schoolCd" column="SCHOOL_CD"/>
+        <result property="schoolName" column="SCHOOL_NAME"/>
+        <collection column="{examId = exam_id and studentId = student_id}" property="results" ofType="ExamDtl" select="selectExamDtlList"/>
+
+
+    </resultMap>
+
+    <select id="selectExamMst" parameterType="ExamMst" resultMap="ExamMstMap">
+        SELECT
+               EXAM_ID
+             , EXAM_YEAR
+             , EXAM_MONTH
+             , STUDENT_SCHOOL_YEAR_CD
+             , FN_GET_CODE_NAME('SCHOOL_YEAR_CD', STUDENT_SCHOOL_YEAR_CD) AS STUDENT_SCHOOL_YEAR_NAME
+             , EXAM_TYPE_CD
+             , FN_GET_CODE_NAME('EXAM_TYPE_CD', EXAM_TYPE_CD) AS EXAM_TYPE_NAME
+             , EXAM_SESSION_CD
+             , FN_GET_CODE_NAME('EXAM_SESSION_CD', EXAM_SESSION_CD) AS EXAM_SESSION_NAME
+             , EXAM_ORGANIZER
+             , SCHOOL_CD
+             , NULL AS SCHOOL_NAME
+          FROM EXAM_MST em
+         WHERE EXAM_ID = #{examId}
+    </select>
+
+    <select id="selectExamDtlList" parameterType="ExamDtl" resultType="ExamDtl">
+        SELECT
+               EXAM_ID
+             , STUDENT_ID
+             , SUBJECT_CD
+             , FN_GET_CODE_NAME('SUBJECT_CD', SUBJECT_CD) AS SUBJECT_NAME
+             , RAW_SCORE
+             , STANDARD_SCORE
+             , CLASS_RANK
+             , SCHOOL_RANK
+             , NATIONAL_PERCENTILE
+             , GRADE
+          FROM EXAM_DTL
+         WHERE EXAM_ID = #{examId}
+         <if test="studentId != null">AND STUDENT_ID = #{studentId}</if>
+         <if test="subjectCd != null">AND SUBJECT_CD = #{subjectCd}</if>
+    </select>
+
+    <insert id="insertExamMst" parameterType="ExamMst" useGeneratedKeys="true" keyColumn="EXAM_ID" keyProperty="examId" >
+        INSERT INTO EXAM_MST (
+               EXAM_YEAR
+             , EXAM_MONTH
+             , STUDENT_SCHOOL_YEAR_CD
+             , EXAM_TYPE_CD
+             , EXAM_SESSION_CD
+             , EXAM_ORGANIZER
+             , SCHOOL_CD
+             , CREATED_AT
+             , CREATED_BY
+             , MODIFIED_AT
+             , MODIFIED_BY
+        )
+        VALUES (
+               #{ examYear }
+             , #{ examMonth }
+             , #{ studentSchoolYearCd }
+             , #{ examTypeCd }
+             , #{ examSessionCd }
+             , #{ examOrganizer }
+             , #{ schoolCd }
+             , #{ createdAt }
+             , #{ createdBy }
+             , #{ modifiedAt }
+             , #{ modifiedBy }
+        )
+    </insert>
+
+    <insert id="insertExamDtl" parameterType="ExamDtl">
+        INSERT INTO EXAM_DTL (
+               EXAM_ID
+             , STUDENT_ID
+             , SUBJECT_CD
+             , RAW_SCORE
+             , STANDARD_SCORE
+             , CLASS_RANK
+             , SCHOOL_RANK
+             , NATIONAL_PERCENTILE
+             , GRADE
+             , CREATED_AT
+             , CREATED_BY
+             , MODIFIED_AT
+             , MODIFIED_BY
+        )
+        VALUES (
+               #{ examId }
+             , #{ studentId }
+             , #{ subjectCd }
+             , #{ rawScore }
+             , #{ standardScore }
+             , #{ classRank }
+             , #{ schoolRank }
+             , #{ nationalPercentile }
+             , #{ grade }
+             , #{ createdAt }
+             , #{ createdBy }
+             , #{ modifiedAt }
+             , #{ modifiedBy }
+        )
+    </insert>
+
+    <update id="updateExamMst" parameterType="ExamMst">
+        UPDATE EXAM_MST
+           SET
+           <if test="examId">               EXAM_ID = #{ examId },  </if>
+           <if test="examYear">             EXAM_YEAR = #{ examYear },  </if>
+           <if test="examMonth">            EXAM_MONTH = #{ examMonth },  </if>
+           <if test="studentSchoolYearCd">  STUDENT_SCHOOL_YEAR_CD = #{ studentSchoolYearCd },  </if>
+           <if test="examTypeCd">           EXAM_TYPE_CD = #{ examTypeCd },  </if>
+           <if test="examSessionCd">        EXAM_SESSION_CD = #{ examSessionCd },  </if>
+           <if test="examOrganizer">        EXAM_ORGANIZER = #{ examOrganizer },  </if>
+                                            MODIFIED_AT = #{ modifiedAt },
+                                            MODIFIED_BY = #{ modifiedBy }
+          WHERE EXAM_ID = #{ examId }
+    </update>
+
+    <update id="updateExamDtl" parameterType="ExamDtl">
+        UPDATE EXAM_DTL
+           SET
+           <if test="rawScore != null">            RAW_SCORE = #{ rawScore }, </if>
+           <if test="standardScore != null">       STANDARD_SCORE = #{ standardScore }, </if>
+           <if test="classRank != null">           CLASS_RANK = #{ classRank }, </if>
+           <if test="schoolRank != null">          SCHOOL_RANK = #{ schoolRank }, </if>
+           <if test="nationalPercentile != null">  NATIONAL_PERCENTILE = #{ nationalPercentile }, </if>
+           <if test="grade != null">               GRADE = #{ grade }, </if>
+                                                   MODIFIED_AT = #{ modifiedAt },
+                                                   MODIFIED_BY = #{ modifiedBy }
+         WHERE EXAM_ID = #{ examId }
+           AND STUDENT_ID = #{ studentId }
+           AND SUBJECT_CD = #{ subjectCd }
+    </update>
+
+
+
+
+
+
+
+
+</mapper>

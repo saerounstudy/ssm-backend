@@ -20,27 +20,27 @@ public class ExamServiceImpl implements ExamService {
         return examMapper.selectManyExamMst(examMst);
     }
     @Override
-    public ExamMst createExam(ExamMst examMst) {
+    public void createExam(ExamMst examMst) {
         examMapper.insertExamMst(examMst);
         for (ExamDtl dtl : examMst.getResults()) {
+            dtl.setExamId(examMst.getExamId());
             examMapper.insertExamDtl(dtl);
         }
-        return this.getExamMst(examMst);
     }
     @Override
     public ExamMst getExamMst(long examId) {
-        return this.getExamMst(ExamMst.builder().examId(examId).build());
+        return this.getExamMst(ExamMst.from(examId));
     }
     @Override
     public ExamMst getExamMst(ExamMst examMst) {
         return examMapper.selectExamMst(examMst)
-                .orElseThrow(SsmException.supplier(ErrorCode.EXAM_NOT_FOUND, "존재하지 않는 시험입니다."));
+                .orElseThrow(SsmException.supplier(ErrorCode.EXAM_NOT_FOUND));
     }
 
     @Override
     public ExamDtl getExamDtl(ExamDtl examDtl) {
         return examMapper.selectExamDtl(examDtl)
-                .orElseThrow(SsmException.supplier(ErrorCode.EXAM_NOT_FOUND, "존재하지 않는 시험상세입니다."));
+                .orElseThrow(SsmException.supplier(ErrorCode.EXAM_NOT_FOUND));
     }
     @Override
     public List<ExamDtl> getExamDtlList(ExamDtl examDtl) {
@@ -48,19 +48,16 @@ public class ExamServiceImpl implements ExamService {
     }
 
     @Override
-    public ExamMst updateExamMst(ExamMst examMst) {
+    public void updateExamMst(ExamMst examMst) {
         examMapper.updateExamMst(examMst);
-        return getExamMst(examMst);
     }
 
     @Override
-    public ExamDtl updateExamDtl(ExamDtl examDtl) {
+    public void updateExamDtl(ExamDtl examDtl) {
         examMapper.updateExamDtl(examDtl);
-        return getExamDtl(examDtl);
     }
     @Override
-    public ExamDtl createExamDtl(ExamDtl examDtl) {
+    public void createExamDtl(ExamDtl examDtl) {
         examMapper.insertExamDtl(examDtl);
-        return getExamDtl(examDtl);
     }
 }

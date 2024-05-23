@@ -21,16 +21,16 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserMst selectOneUserWithId(long userId) {
         return userMapper.selectOneUserWithId(userId)
-                .orElseThrow(SsmException.supplier(ErrorCode.USER_NOT_FOUND, "존재하지 않는 유저입니다."));
+                .orElseThrow(SsmException.supplier(ErrorCode.USER_NOT_FOUND));
     }
 
     @Override
     public UserMst createOneUser(UserMst userMst) {
         if (userMst.getPassword().trim().isEmpty()) {
-            throw SsmException.from(ErrorCode.EMPTY_PASSWORD, "비밀번호는 공백일 수 없습니다.");
+            throw SsmException.from(ErrorCode.EMPTY_PASSWORD);
         }
         if (userMapper.selectOneUserWithEmail(userMst.getUserEmail()).isPresent()) {
-            throw SsmException.from(ErrorCode.USER_EMAIL_CONFLICT, "이미 사용중인 Email입니다.");
+            throw SsmException.from(ErrorCode.EMAIL_ALREADY_TAKEN);
         }
         String passwordHash = passwordHandler.hash(userMst.getPassword());
         userMst.setPasswordHash(passwordHash);

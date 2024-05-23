@@ -25,7 +25,13 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<ErrorResponse> handleJsonParseError(final HttpMessageNotReadableException e, final HttpServletRequest request) {
-        SsmException exception = SsmException.from(ErrorCode.BAD_BODY_REQUEST, e.getMessage());
+        SsmException exception;
+        if (e.getRootCause() instanceof SsmException rootEx) {
+            exception = rootEx;
+        }
+        else {
+            exception = SsmException.from(ErrorCode.BAD_BODY_REQUEST, e.getMessage());
+        }
         exception.setPath(request.getRequestURI());
         return ErrorResponse.toResponseEntity(exception);
     }

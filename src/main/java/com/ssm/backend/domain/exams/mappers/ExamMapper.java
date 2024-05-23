@@ -18,6 +18,8 @@ public interface ExamMapper {
     Optional<ExamMst> selectExamMst(ExamMst examMst);
     Optional<ExamDtl> selectExamDtl(ExamDtl examDtl);
     List<ExamDtl> selectExamDtlList(ExamDtl examDtl);
+    @Audit
     void updateExamMst(ExamMst examMst);
+    @Audit
     void updateExamDtl(ExamDtl examDtl);
 }

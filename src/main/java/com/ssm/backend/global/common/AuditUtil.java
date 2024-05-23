@@ -1,6 +1,6 @@
 package com.ssm.backend.global.common;
 
-import com.ssm.backend.global.dto.Auditable;
+import com.ssm.backend.global.common.dto.Auditable;
 
 import java.time.LocalDateTime;
 

@@ -2,6 +2,8 @@ package com.ssm.backend.global.db.codes;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
+import com.ssm.backend.global.exceptions.ErrorCode;
+import com.ssm.backend.global.exceptions.SsmException;
 import lombok.AllArgsConstructor;
 
 import java.util.Arrays;
@@ -28,6 +30,8 @@ public enum RegistrationSourceCd {
     private static final Map<String, RegistrationSourceCd> map = Arrays.stream(RegistrationSourceCd.values()).collect(Collectors.toMap(cmCode -> cmCode.code, cmCode -> cmCode));
     @JsonCreator
     public static RegistrationSourceCd valueOfCode(String val) {
-        return map.getOrDefault(val, null);
+        if (val == null) return null;
+        if (!map.containsKey(val)) throw SsmException.from(ErrorCode.BAD_COMMON_CODE, "유효하지 않은 공통코드 REGISTRATION_SOURCE_CD: " + val);
+        return map.get(val);
     }
 }
