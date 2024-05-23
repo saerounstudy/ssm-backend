@@ -3,7 +3,7 @@ package com.ssm.backend.domain.students.dto;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import com.ssm.backend.global.common.Auditable;
+import com.ssm.backend.global.dto.Auditable;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;

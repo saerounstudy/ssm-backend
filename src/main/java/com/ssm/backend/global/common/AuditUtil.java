@@ -1,5 +1,7 @@
 package com.ssm.backend.global.common;
 
+import com.ssm.backend.global.dto.Auditable;
+
 import java.time.LocalDateTime;
 
 public class AuditUtil {

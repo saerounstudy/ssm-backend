@@ -2,7 +2,7 @@ package com.ssm.backend.global.aspects;
 
 import com.ssm.backend.global.annotations.Audit;
 import com.ssm.backend.global.common.AuditUtil;
-import com.ssm.backend.global.common.Auditable;
+import com.ssm.backend.global.dto.Auditable;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;

@@ -1,7 +1,7 @@
 package com.ssm.backend.domain.students.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.ssm.backend.global.common.Auditable;
+import com.ssm.backend.global.dto.Auditable;
 import com.ssm.backend.global.db.codes.RegistrationSourceCd;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

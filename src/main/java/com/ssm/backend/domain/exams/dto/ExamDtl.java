@@ -1,4 +1,4 @@
-package com.ssm.backend.domain.students.dto;
+package com.ssm.backend.domain.exams.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.ssm.backend.global.dto.Auditable;
@@ -10,15 +10,17 @@ import lombok.experimental.SuperBuilder;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
-@NoArgsConstructor
 @SuperBuilder
-public class StudentSurveyScoreHis extends Auditable {
+@NoArgsConstructor
+public class ExamDtl extends Auditable {
     @JsonInclude(JsonInclude.Include.NON_NULL)
+    private Long examId;
     private Long studentId;
     private SubjectCd subjectCd;
-    private String subjectName;
-    private Integer scoreFirst;
-    private Integer scoreSecond;
-    private Integer scoreThird;
-    private String remark;
+    private Double rawScore;
+    private Double standardScore;
+    private Integer classRank;
+    private Integer schoolRank;
+    private Double nationalPercentile;
+    private String grade;
 }
