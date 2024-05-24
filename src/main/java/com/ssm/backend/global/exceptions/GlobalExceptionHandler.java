@@ -2,10 +2,12 @@ package com.ssm.backend.global.exceptions;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.log4j.Log4j2;
+import org.apache.ibatis.reflection.ReflectionException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import java.sql.SQLSyntaxErrorException;
 
 @Log4j2
 @RestControllerAdvice
@@ -21,6 +23,20 @@ public class GlobalExceptionHandler {
         ResponseEntity<ErrorResponse> errorResponse = ErrorResponse.toResponseEntity(exception);
         log.error("[SSM EXCEPTION HANDLING] {}", errorResponse.getBody());
         return errorResponse;
+    }
+
+    @ExceptionHandler(ReflectionException.class)
+    public ResponseEntity<ErrorResponse> mybatisReflectionException(final ReflectionException e, final HttpServletRequest request) {
+        SsmException exception = SsmException.from(ErrorCode.MYBATIS_REFLECTION_EXCEPTION, e.getMessage());
+        exception.setPath(request.getRequestURI());
+        return ErrorResponse.toResponseEntity(exception);
+    }
+
+    @ExceptionHandler(SQLSyntaxErrorException.class)
+    public ResponseEntity<ErrorResponse> handleSqlSyntaxError(final SQLSyntaxErrorException e, final HttpServletRequest request) {
+        SsmException exception = SsmException.from(ErrorCode.SQL_SYNTAX_ERROR, e.getMessage());
+        exception.setPath(request.getRequestURI());
+        return ErrorResponse.toResponseEntity(exception);
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
