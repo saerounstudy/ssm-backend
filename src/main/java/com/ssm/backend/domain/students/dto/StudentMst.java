@@ -28,4 +28,8 @@ public class StudentMst extends Auditable {
     private boolean includeProfile;  // selectStudentMstWithStudentId 조회 시 profile 필드 포함여부
     @JsonIgnore
     private boolean includeSurvey;  // selectStudentMstWithStudentId 조회 시 survey 필드 포함여부
+
+    public static StudentMst from(Long studentId) {
+        return StudentMst.builder().studentId(studentId).build();
+    }
 }

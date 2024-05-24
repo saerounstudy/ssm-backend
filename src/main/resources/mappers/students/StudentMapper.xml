@@ -268,4 +268,25 @@
             #{modifiedBy}
         )
     </insert>
+
+    <insert id="insertStudentExam" parameterType="StudentExam">
+        INSERT INTO STUDENT_EXAM
+        (
+            STUDENT_ID,
+            EXAM_ID,
+            CREATED_AT,
+            CREATED_BY,
+            MODIFIED_AT,
+            MODIFIED_BY
+        )
+        VALUES
+        (
+            #{studentId},
+            #{examId},
+            #{createdAt},
+            #{createdBy},
+            #{modifiedAt},
+            #{modifiedBy}
+        )
+    </insert>
 </mapper>

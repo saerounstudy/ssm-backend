@@ -44,6 +44,9 @@ public class StudentProfile extends Auditable {
                 parentRelationshipCd1 == null &&
                 parentContact2 == null &&
                 parentRelationshipCd2 == null;
+    }
 
+    public static StudentProfile from(Long studentId) {
+        return StudentProfile.builder().studentId(studentId).build();
     }
 }

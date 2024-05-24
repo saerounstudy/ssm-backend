@@ -25,4 +25,7 @@ public interface StudentMapper {
     @Audit(full = true)
     void insertOneStudentRegistration(StudentRegistration studentRegistration);
     Optional<StudentProfile> selectOneStudentProfile(StudentProfile studentProfile);
+    @Audit(full = true)
+    void insertStudentExam(StudentExam studentExam);
+    List<StudentExam> selectManyStudentExam(StudentMst studentMst);
 }

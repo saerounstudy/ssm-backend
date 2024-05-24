@@ -23,7 +23,7 @@ public class ExamDtl extends Auditable {
     private Integer classRank;
     private Integer schoolRank;
     private Double nationalPercentile;
-    private String grade;
+    private Integer grade;
 
     public boolean hasBody() {
         return this.rawScore != null ||

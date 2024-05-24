@@ -1,18 +1,15 @@
 package com.ssm.backend.domain.exams.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.ssm.backend.global.common.dto.Auditable;
 import com.ssm.backend.global.db.codes.ExamSessionCd;
 import com.ssm.backend.global.db.codes.ExamTypeCd;
 import com.ssm.backend.global.db.codes.SchoolYearCd;
-import com.ssm.backend.global.exceptions.ErrorCode;
-import com.ssm.backend.global.exceptions.SsmException;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import lombok.NonNull;
 import lombok.experimental.SuperBuilder;
-
 import java.util.List;
 
 @EqualsAndHashCode(callSuper = true)
@@ -32,14 +29,22 @@ public class ExamMst extends Auditable {
     private String examOrganizer;
     private String schoolCd;
     private String schoolName;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private List<ExamDtl> results;
     @JsonIgnore
-    private Long studentId; //조회조건에 사용
-    @JsonIgnore
     private boolean includeResult;
+    @JsonIgnore
+    private Long studentId;
 
-    public static ExamMst from(long examId) {
+    public static ExamMst from() {
+        return new ExamMst();
+    }
+
+    public static ExamMst from(Long examId) {
         return ExamMst.builder().examId(examId).build();
+    }
+    public static ExamMst fromStudentId(Long studentId) {
+        return ExamMst.builder().studentId(studentId).build();
     }
     public ExamMst includeResult(boolean val) {
         this.includeResult = val;

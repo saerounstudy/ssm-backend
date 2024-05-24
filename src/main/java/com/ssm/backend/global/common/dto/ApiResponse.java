@@ -13,9 +13,9 @@ import java.time.LocalDateTime;
 @EqualsAndHashCode(callSuper = true)
 public class ApiResponse<T> extends BaseResponse {
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    private T data;
-    @JsonInclude(JsonInclude.Include.NON_NULL)
     private String message;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private T data;
 
     ApiResponse(HttpStatus status, T data) {
         this.success = true;
@@ -42,5 +42,14 @@ public class ApiResponse<T> extends BaseResponse {
     }
     public static <T> ApiResponse<T> created() {
         return new ApiResponse<>(HttpStatus.CREATED, null, ResponseMessage.CREATED);
+    }
+    public static <T> ApiResponse<T> deleted(T data) {
+        return new ApiResponse<>(HttpStatus.OK, data, ResponseMessage.DELETED);
+    }
+    public static <T> ApiResponse<T> updated(T data) {
+        return new ApiResponse<>(HttpStatus.OK, data, ResponseMessage.UPDATED);
+    }
+    public static <T> ApiResponse<T> created(T data) {
+        return new ApiResponse<>(HttpStatus.CREATED, data, ResponseMessage.CREATED);
     }
 }

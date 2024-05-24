@@ -3,6 +3,8 @@ HELP.md
 build/
 application*.properties
 logs/
+webapp/
+debug/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
 !**/src/test/**/build/

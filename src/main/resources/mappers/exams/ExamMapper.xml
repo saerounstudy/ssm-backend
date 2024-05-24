@@ -2,8 +2,37 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 
 <mapper namespace="com.ssm.backend.domain.exams.mappers.ExamMapper">
-    <select id="selectManyExamMst" parameterType="ExamMst" resultType="ExamMst">
+    <select id="selectManyExamMst" resultType="ExamMst">
+        SELECT
+               em.EXAM_ID
+             , em.EXAM_YEAR
+             , em.EXAM_MONTH
+             , em.STUDENT_SCHOOL_YEAR_CD
+             , FN_GET_CODE_NAME('SCHOOL_YEAR_CD', em.STUDENT_SCHOOL_YEAR_CD) AS STUDENT_SCHOOL_YEAR_NAME
+             , em.EXAM_TYPE_CD
+             , FN_GET_CODE_NAME('EXAM_TYPE_CD', em.EXAM_TYPE_CD) AS EXAM_TYPE_NAME
+             , em.EXAM_SESSION_CD
+             , FN_GET_CODE_NAME('EXAM_SESSION_CD', em.EXAM_SESSION_CD) AS EXAM_SESSION_NAME
+             , em.EXAM_ORGANIZER
+             , em.SCHOOL_CD
+             , NULL AS SCHOOL_NAME
+        FROM EXAM_MST em
+        <if test="param.studentId != null">
+            JOIN STUDENT_EXAM se ON se.EXAM_ID = em.EXAM_ID
+        </if>
+        WHERE 1=1
+            <if test="param.examId != null">               AND em.EXAM_ID = #{param.examId}                               </if>
+            <if test="param.studentId != null">            AND se.STUDENT_ID = #{param.studentId}                         </if>
+            <if test="filter.examYear != null">            AND em.EXAM_YEAR = #{filter.examYear}                          </if>
+            <if test="filter.examMonth != null">           AND em.EXAM_MONTH = #{filter.examMonth}                        </if>
+            <if test="filter.studentSchoolYearCd != null"> AND em.STUDENT_SCHOOL_YEAR_CD = #{filter.studentSchoolYearCd}  </if>
+            <if test="filter.examTypeCd != null">          AND em.EXAM_TYPE_CD = #{filter.examTypeCd}                     </if>
+            <if test="filter.examSessionCd != null">       AND em.EXAM_SESSION_CD = #{filter.examSessionCd}               </if>
+        ORDER BY
+            em.EXAM_YEAR <if test="filter.desc"> DESC </if> ,
+            em.EXAM_MONTH <if test="filter.desc"> DESC </if>
 
+        OFFSET NVL(#{filter.page} * #{filter.size}, 0) ROWS FETCH NEXT NVL(#{filter.size}, 10) ROWS ONLY
     </select>
 
     <resultMap id="ExamMstMap" type="ExamMst">
@@ -19,9 +48,7 @@
         <result property="examOrganizer" column="EXAM_ORGANIZER"/>
         <result property="schoolCd" column="SCHOOL_CD"/>
         <result property="schoolName" column="SCHOOL_NAME"/>
-        <collection column="{examId = exam_id and studentId = student_id}" property="results" ofType="ExamDtl" select="selectExamDtlList"/>
-
-
+        <collection property="results" ofType="ExamDtl" select="selectManyExamDtl" column="{examId=exam_id}"/>
     </resultMap>
 
     <select id="selectExamMst" parameterType="ExamMst" resultMap="ExamMstMap">
@@ -42,7 +69,7 @@
          WHERE EXAM_ID = #{examId}
     </select>
 
-    <select id="selectExamDtlList" parameterType="ExamDtl" resultType="ExamDtl">
+    <select id="selectManyExamDtl" parameterType="ExamDtl" resultType="ExamDtl">
         SELECT
                EXAM_ID
              , STUDENT_ID
@@ -152,12 +179,5 @@
            AND STUDENT_ID = #{ studentId }
            AND SUBJECT_CD = #{ subjectCd }
     </update>
-
-
-
-
-
-
-
 
 </mapper>

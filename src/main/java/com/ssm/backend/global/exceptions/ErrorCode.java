@@ -13,6 +13,10 @@ public enum ErrorCode {
     BAD_QUERY_REQUEST(HttpStatus.BAD_REQUEST, "invalid_query_format.", "잘못된 query입니다"),
     BAD_COMMON_CODE(HttpStatus.BAD_REQUEST, "invalid_common_code", "잘못된 공통코드입니다."),
     NOTHING_TO_UPDATE(HttpStatus.BAD_REQUEST, "nothing_to_update", "업데이트할 값이 없습니다."),
+    MISSING_REQUEST_ATTRIBUTE(HttpStatus.INTERNAL_SERVER_ERROR, "missing_request_attribute", "Failed to autowire Request"),
+    SQL_SYNTAX_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "sql_syntax_error", "Internal Server Error: SQL Syntax"),
+    MYBATIS_REFLECTION_EXCEPTION(HttpStatus.INTERNAL_SERVER_ERROR, "mybatis_reflection_exception", "Internal Server Error: Mybatis Reflection Error"),
+
     /* USERS */
     /* 400 */
     EMPTY_PASSWORD(HttpStatus.BAD_REQUEST, "empty_password", "비밀번호는 공백일 수 없습니다."),
@@ -31,6 +35,8 @@ public enum ErrorCode {
     /* EXAMS */
     /* 404 */
     EXAM_NOT_FOUND(HttpStatus.NOT_FOUND, "exam_not_found", "존재하지 않는 시험입니다."),
+    INVALID_EXAM_SESSION_REAL(HttpStatus.BAD_REQUEST, "invalid_exam_session_real", "내신의 examSessionCd는 MID 또는 FIN이어야 합니다."),
+    INVALID_EXAM_SESSION_MOCK(HttpStatus.BAD_REQUEST, "invalid_exam_session_mock", "모의고사의 examSessionCd는 MID 또는 FIN 일 수 없습니다."),
     ;
     private final HttpStatus status;
     private final String code;
